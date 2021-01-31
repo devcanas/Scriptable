@@ -28,7 +28,7 @@ Begin Script
 
 let widget = new ListWidget()
 
-const country = args.widgetParameter?args.widgetParameter:'Sweden'
+const country = args.widgetParameter?args.widgetParameter:'Portugal'
 
 const API_URL = "https://coronavirus-19-api.herokuapp.com/countries/"+country;
 
@@ -71,12 +71,11 @@ const widgetDate = widget.addText(date.toLocaleDateString())
 widgetDate.font = Font.systemFont(13) 
 widgetDate.textColor=Color.white()
 widgetDate.centerAlignText()
-
+widget.addSpacer(10)
 //add items to the widget
-addItem('total cases', cases)
-addItem('total deaths', deaths)
-addItem('active', active)
-addItem('recovered', recovered)
+addItem('Today cases', todayCases)
+addItem('Today deaths', todayDeaths)
+addItem('Active cases', active)
 
 // Finalize widget settings 
 widget.setPadding(16,16,16,16)
@@ -96,10 +95,8 @@ function addItem(item,itemValue){
   let itemStack = widget.addStack()
   let textStack = itemStack.addStack()
   itemStack.addSpacer()
-  let symbolStack = itemStack.addStack()
   itemStack.layoutHorizontally()
   textStack.layoutVertically()
-  symbolStack.layoutVertically()
   
   let val = textStack.addText(new Intl.NumberFormat().format(itemValue))
   val.font=Font.mediumRoundedSystemFont(12)
@@ -138,15 +135,7 @@ function addItem(item,itemValue){
     oldVal = oldValDict.value
     oldDate = new Date(oldValDict.date)
   }
-  
-  let trendColors = {'recovered':{up:Color.green().hex,down:Color.red().hex},'total cases':{up:Color.red().hex,down:Color.green().hex},'total deaths':{up:Color.red().hex,down:Color.green().hex},'active':{up:Color.red().hex,down:Color.green().hex}}
-
-  const trend = getTrend(itemValue, oldVal)
-  const trendSymbol = createSymbol(trend);
-  const trendImg = symbolStack.addImage(trendSymbol);
-  trendImg.resizable = false;
-  trendImg.tintColor = (trend.includes('left') || !colorArrows)?Color.white():new Color(trendColors[item][trend.match(/[^\.]+$/)])
-  trendImg.imageSize = new Size(30, 20);
+ 
   widget.addSpacer(2)
 }
     
